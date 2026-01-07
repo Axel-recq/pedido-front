@@ -1,0 +1,5 @@
+export { PedidoTable } from './PedidoTable'
+export { PedidoForm } from './PedidoForm'
+export { DeletePedidoModal } from './DeletePedidoModal'
+export { PedidoCard } from './PedidoCard'
+export { PedidoList } from './PedidoList'
