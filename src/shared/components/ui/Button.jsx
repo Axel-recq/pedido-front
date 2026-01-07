@@ -1,4 +1,4 @@
-cat > src/shared/components/ui/Button.jsx << 'EOF'
+
 /**
  * Componente Button
  * Botón reutilizable con variantes y estados
@@ -112,4 +112,3 @@ Button.propTypes = {
 }
 
 export default Button
-EOF

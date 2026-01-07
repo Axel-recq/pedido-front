@@ -1,4 +1,3 @@
-
 /**
  * Hook para manejar localStorage de forma reactiva
  * Sincroniza el estado de React con localStorage

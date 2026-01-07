@@ -20,26 +20,23 @@ export const Card = ({
   footerClassName = '',
   onClick,
 }) => {
-  // Estilos base
-  const baseStyles = 'bg-white rounded-lg border border-gray-200 transition-all'
+  // Estilos base con soporte dark mode
+  const baseStyles = 'bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 transition-all duration-200'
 
-  // Variantes
   const variants = {
     default: '',
-    hover: 'hover:shadow-md cursor-pointer',
+    hover: 'hover:shadow-md cursor-pointer hover:border-gray-300 dark:hover:border-gray-600',
     bordered: 'border-2',
   }
 
-  // Sombras
   const shadows = {
     none: '',
     sm: 'shadow-sm',
-    default: 'shadow',
-    md: 'shadow-md',
-    lg: 'shadow-lg',
+    default: 'shadow dark:shadow-none', // Quitamos sombras fuertes en dark mode
+    md: 'shadow-md dark:shadow-none',
+    lg: 'shadow-lg dark:shadow-none',
   }
 
-  // Padding
   const paddings = {
     none: '',
     sm: 'p-4',
@@ -60,24 +57,24 @@ export const Card = ({
     <div className={combinedClasses} onClick={onClick}>
       {/* Header */}
       {(title || subtitle) && (
-        <div className={`border-b border-gray-200 pb-4 mb-4 ${paddingClass} ${headerClassName}`}>
+        <div className={`border-b border-gray-200 dark:border-gray-700 pb-4 mb-4 ${paddingClass} ${headerClassName}`}>
           {title && (
-            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{title}</h3>
           )}
           {subtitle && (
-            <p className="mt-1 text-sm text-gray-600">{subtitle}</p>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">{subtitle}</p>
           )}
         </div>
       )}
 
       {/* Body */}
-      <div className={`${paddingClass} ${bodyClassName}`}>
+      <div className={`${paddingClass} ${bodyClassName} text-gray-700 dark:text-gray-300`}>
         {children}
       </div>
 
       {/* Footer */}
       {footer && (
-        <div className={`border-t border-gray-200 pt-4 mt-4 ${paddingClass} ${footerClassName}`}>
+        <div className={`border-t border-gray-200 dark:border-gray-700 pt-4 mt-4 bg-gray-50 dark:bg-gray-800/50 rounded-b-lg ${paddingClass} ${footerClassName}`}>
           {footer}
         </div>
       )}

@@ -12,7 +12,7 @@ export class Usuario {
     this.role = data.role || 'User'
     this.activo = data.activo !== undefined ? data.activo : true
     this.fechaCreacion = data.fechaCreacion || null
-    
+
     this.name = this.nombre // El Header busca 'name'
   }
 
@@ -31,7 +31,9 @@ export class Usuario {
     }
     return 'U'
   }
-
+    getInitials() {
+    return this.getIniciales()
+  }
   // Verificar si es administrador
   esAdmin() {
     return this.role === 'Admin'

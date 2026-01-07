@@ -1,4 +1,3 @@
-
 /**
  * Hook de Login
  * Maneja la lógica de inicio de sesión

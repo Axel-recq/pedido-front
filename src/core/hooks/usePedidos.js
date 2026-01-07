@@ -1,137 +1,189 @@
+/**
+ * Hook de Pedidos
+ * Maneja la lógica de negocio de pedidos con React Query
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-hot-toast'
-// Asumiremos que crearemos este servicio en el siguiente paso
-import * as pedidoService from '../services/pedido.service'
+import { pedidoService } from '@/core/services'
+import toast from 'react-hot-toast'
+import { SUCCESS_MESSAGES } from '@/config/constants'
+
+// Query Keys
+const PEDIDOS_QUERY_KEY = 'pedidos'
 
 /**
- * CLAVES DE CONSULTA (Query Keys)
- * Centralizamos las keys para facilitar la invalidación de caché
+ * Hook para obtener todos los pedidos
+ * @param {Object} params - Parámetros de filtrado
+ * @returns {Object} Query result
  */
-export const PEDIDOS_KEYS = {
-  all: ['pedidos'],
-  lists: () => [...PEDIDOS_KEYS.all, 'list'],
-  list: (filters) => [...PEDIDOS_KEYS.lists(), { ...filters }],
-  details: () => [...PEDIDOS_KEYS.all, 'detail'],
-  detail: (id) => [...PEDIDOS_KEYS.details(), id],
-  stats: () => [...PEDIDOS_KEYS.all, 'stats'],
-}
-
-/**
- * 1. Hook para obtener la lista de pedidos (con filtros opcionales)
- */
-export const usePedidos = (filters = {}) => {
+export const usePedidos = (params = {}) => {
   return useQuery({
-    queryKey: PEDIDOS_KEYS.list(filters),
-    queryFn: () => pedidoService.getPedidos(filters),
-    keepPreviousData: true, // Útil para paginación o filtros
-    staleTime: 1000 * 60 * 5, // 5 minutos de caché fresco
-    retry: 1,
+    queryKey: [PEDIDOS_QUERY_KEY, params],
+    queryFn: () => pedidoService.getAll(params),
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    retry: 2,
+    onError: (error) => {
+      toast.error(error.message || 'Error al cargar pedidos')
+    },
   })
 }
 
 /**
- * 2. Hook para buscar pedidos (Alias semántico de usePedidos)
- */
-export const useSearchPedidos = (searchTerm) => {
-  return usePedidos({ search: searchTerm })
-}
-
-/**
- * 3. Hook para filtrar por estado (Alias semántico)
- */
-export const usePedidosByEstado = (estado) => {
-  return usePedidos({ estado })
-}
-
-/**
- * 4. Hook para obtener un solo pedido por ID
+ * Hook para obtener un pedido por ID
+ * @param {number} id - ID del pedido
+ * @returns {Object} Query result
  */
 export const usePedido = (id) => {
   return useQuery({
-    queryKey: PEDIDOS_KEYS.detail(id),
-    queryFn: () => pedidoService.getPedidoById(id),
-    enabled: !!id, // Solo se ejecuta si hay ID
+    queryKey: [PEDIDOS_QUERY_KEY, id],
+    queryFn: () => pedidoService.getById(id),
+    enabled: !!id, // Solo ejecutar si hay ID
+    retry: 1,
+    onError: (error) => {
+      toast.error(error.message || 'Error al cargar pedido')
+    },
   })
 }
 
 /**
- * 5. Hook para obtener estadísticas (Bonus)
+ * Hook para crear un pedido
+ * @returns {Object} Mutation result
+ */
+export const useCreatePedido = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (pedidoData) => pedidoService.create(pedidoData),
+    onSuccess: (data) => {
+      // Invalidar queries para refrescar la lista
+      queryClient.invalidateQueries([PEDIDOS_QUERY_KEY])
+      
+      toast.success(SUCCESS_MESSAGES.PEDIDO_CREATED)
+      
+      return data
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Error al crear pedido')
+    },
+  })
+}
+
+/**
+ * Hook para actualizar un pedido
+ * @returns {Object} Mutation result
+ */
+export const useUpdatePedido = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: ({ id, data }) => pedidoService.update(id, data),
+    onSuccess: (data, variables) => {
+      // Invalidar queries
+      queryClient.invalidateQueries([PEDIDOS_QUERY_KEY])
+      queryClient.invalidateQueries([PEDIDOS_QUERY_KEY, variables.id])
+      
+      toast.success(SUCCESS_MESSAGES.PEDIDO_UPDATED)
+      
+      return data
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Error al actualizar pedido')
+    },
+  })
+}
+
+/**
+ * Hook para eliminar un pedido
+ * @returns {Object} Mutation result
+ */
+export const useDeletePedido = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id) => pedidoService.delete(id),
+    onSuccess: (_, id) => {
+      // Invalidar queries
+      queryClient.invalidateQueries([PEDIDOS_QUERY_KEY])
+      
+      // Remover el pedido específico del cache
+      queryClient.removeQueries([PEDIDOS_QUERY_KEY, id])
+      
+      toast.success(SUCCESS_MESSAGES.PEDIDO_DELETED)
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Error al eliminar pedido')
+    },
+  })
+}
+
+/**
+ * Hook para buscar pedidos
+ * @param {string} query - Término de búsqueda
+ * @returns {Object} Query result
+ */
+export const useSearchPedidos = (query) => {
+  return useQuery({
+    queryKey: [PEDIDOS_QUERY_KEY, 'search', query],
+    queryFn: () => pedidoService.search(query),
+    enabled: !!query && query.length >= 2, // Buscar solo si hay al menos 2 caracteres
+    staleTime: 1000 * 30, // 30 segundos
+  })
+}
+
+/**
+ * Hook para filtrar pedidos por estado
+ * @param {string} estado - Estado del pedido
+ * @returns {Object} Query result
+ */
+export const usePedidosByEstado = (estado) => {
+  return useQuery({
+    queryKey: [PEDIDOS_QUERY_KEY, 'estado', estado],
+    queryFn: () => pedidoService.filterByEstado(estado),
+    enabled: !!estado,
+    staleTime: 1000 * 60 * 2, // 2 minutos
+  })
+}
+
+/**
+ * Hook para obtener estadísticas de pedidos
+ * @returns {Object} Query result
  */
 export const usePedidosStats = () => {
   return useQuery({
-    queryKey: PEDIDOS_KEYS.stats(),
-    queryFn: pedidoService.getPedidosStats,
-    staleTime: 1000 * 60 * 10, // 10 minutos
+    queryKey: [PEDIDOS_QUERY_KEY, 'stats'],
+    queryFn: () => pedidoService.getStatistics(),
+    staleTime: 1000 * 60 * 5, // 5 minutos
   })
 }
 
 /**
- * 6. Hook unificado para Mutaciones (Crear, Actualizar, Borrar)
- * Retorna las funciones individuales para mantener tu index.js limpio
+ * Hook combinado para mutaciones de pedidos
+ * @returns {Object} Objeto con todas las mutaciones
  */
 export const usePedidoMutations = () => {
-  const queryClient = useQueryClient()
-
-  // --- Crear ---
-  const createMutation = useMutation({
-    mutationFn: pedidoService.createPedido,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PEDIDOS_KEYS.lists() })
-      toast.success('Pedido creado exitosamente')
-    },
-    onError: (error) => {
-      toast.error(error.response?.data?.message || 'Error al crear el pedido')
-    },
-  })
-
-  // --- Actualizar ---
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }) => pedidoService.updatePedido(id, data),
-    onSuccess: (_, variables) => {
-      // Invalidamos la lista y el detalle específico
-      queryClient.invalidateQueries({ queryKey: PEDIDOS_KEYS.lists() })
-      queryClient.invalidateQueries({ queryKey: PEDIDOS_KEYS.detail(variables.id) })
-      toast.success('Pedido actualizado correctamente')
-    },
-    onError: (error) => {
-      toast.error('No se pudo actualizar el pedido')
-    },
-  })
-
-  // --- Eliminar ---
-  const deleteMutation = useMutation({
-    mutationFn: pedidoService.deletePedido,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: PEDIDOS_KEYS.lists() })
-      toast.success('Pedido eliminado')
-    },
-    onError: (error) => {
-      toast.error('Error al eliminar el pedido')
-    },
-  })
+  const createMutation = useCreatePedido()
+  const updateMutation = useUpdatePedido()
+  const deleteMutation = useDeletePedido()
 
   return {
-    createPedido: createMutation.mutateAsync,
-    updatePedido: updateMutation.mutateAsync,
-    deletePedido: deleteMutation.mutateAsync,
-    isCreating: createMutation.isPending,
-    isUpdating: updateMutation.isPending,
-    isDeleting: deleteMutation.isPending,
+    create: createMutation,
+    update: updateMutation,
+    delete: deleteMutation,
+    isLoading:
+      createMutation.isLoading ||
+      updateMutation.isLoading ||
+      deleteMutation.isLoading,
   }
 }
 
-// Exports individuales para mantener compatibilidad con tu index.js original
-export const useCreatePedido = () => {
-  const { createPedido, isCreating } = usePedidoMutations()
-  return { mutate: createPedido, isLoading: isCreating }
-}
-
-export const useUpdatePedido = () => {
-  const { updatePedido, isUpdating } = usePedidoMutations()
-  return { mutate: updatePedido, isLoading: isUpdating }
-}
-
-export const useDeletePedido = () => {
-  const { deletePedido, isDeleting } = usePedidoMutations()
-  return { mutate: deletePedido, isLoading: isDeleting }
+export default {
+  usePedidos,
+  usePedido,
+  useCreatePedido,
+  useUpdatePedido,
+  useDeletePedido,
+  useSearchPedidos,
+  usePedidosByEstado,
+  usePedidosStats,
+  usePedidoMutations,
 }
