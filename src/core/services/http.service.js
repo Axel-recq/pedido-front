@@ -11,29 +11,24 @@ const httpClient = axios.create({
   headers: API_CONFIG.headers,
 })
 
-/**
- * Interceptor de Request
- * Agrega el token de autenticación a todas las peticiones
- */
+ 
 httpClient.interceptors.request.use(
   (config) => {
-    // Obtener token del localStorage
+ 
     const token = localStorage.getItem(STORAGE_KEYS.TOKEN)
-
-    // Si existe token, agregarlo al header
+ 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
-
-    // Log para desarrollo (puedes removerlo en producción)
+ 
     if (import.meta.env.DEV) {
-      console.log('📤 Request:', config.method?.toUpperCase(), config.url)
+      console.log('  Request:', config.method?.toUpperCase(), config.url)
     }
 
     return config
   },
   (error) => {
-    console.error('❌ Request Error:', error)
+    console.error('  Request Error:', error)
     return Promise.reject(error)
   }
 )
@@ -44,7 +39,7 @@ httpClient.interceptors.request.use(
  */
 httpClient.interceptors.response.use(
   (response) => {
-    // Log para desarrollo
+  
     if (import.meta.env.DEV) {
       console.log('📥 Response:', response.status, response.config.url)
     }
@@ -54,10 +49,9 @@ httpClient.interceptors.response.use(
   (error) => {
     // Log para desarrollo
     if (import.meta.env.DEV) {
-      console.error('❌ Response Error:', error.response?.status, error.config?.url)
+      console.error('  Response Error:', error.response?.status, error.config?.url)
     }
-
-    // Manejar errores según el código de estado
+ 
     if (error.response) {
       const { status, data } = error.response
 
@@ -97,10 +91,7 @@ httpClient.interceptors.response.use(
   }
 )
 
-/**
- * Maneja el error 401 (No autorizado)
- * Limpia el token y redirecciona al login
- */
+ 
 const handleUnauthorized = () => {
   // Limpiar token y datos de usuario
   localStorage.removeItem(STORAGE_KEYS.TOKEN)
@@ -112,10 +103,7 @@ const handleUnauthorized = () => {
   }
 }
 
-/**
- * Clase HttpService
- * Proporciona métodos para realizar peticiones HTTP
- */
+ 
 class HttpService {
   /**
    * GET Request
@@ -260,8 +248,7 @@ class HttpService {
     localStorage.removeItem(STORAGE_KEYS.USER)
   }
 }
-
-// Exportar instancia única (Singleton)
+ 
 const httpService = new HttpService()
 
 export default httpService
