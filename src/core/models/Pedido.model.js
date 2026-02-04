@@ -1,8 +1,4 @@
-/**
- * Modelo de Pedido
- * Define la estructura y validaciones de un pedido
- */
-
+ 
 import { PEDIDO_ESTADOS } from '@/config/constants'
 
 export class Pedido {
