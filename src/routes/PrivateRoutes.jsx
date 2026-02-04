@@ -6,7 +6,7 @@ export const PrivateRoutes = () => {
   return (
     <ProtectedRoute>
       <MainLayout>
-        {/* Aquí se renderizarán las páginas hijas (PedidosPage, etc.) */}
+        
         <Outlet />
       </MainLayout>
     </ProtectedRoute>
