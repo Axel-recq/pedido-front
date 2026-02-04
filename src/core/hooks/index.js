@@ -1,6 +1,3 @@
-/**
- * Barrel export de todos los hooks
- */
 
 export { useLocalStorage } from './useLocalStorage'
 export { useAuth } from './useAuth'
