@@ -1,8 +1,4 @@
-/**
- * Componente ProtectedRoute
- * Protege rutas que requieren autenticación
- */
-
+ 
 import { Navigate, useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useAuth } from '@/core/hooks'
