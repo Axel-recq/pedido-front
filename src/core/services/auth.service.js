@@ -7,13 +7,7 @@ import { AuthResponse, User } from '@/core/models'
 import { jwtDecode } from 'jwt-decode'
 
 class AuthService {
-  /**
-   * Realiza el login del usuario
-   * @param {Object} credentials - Credenciales de acceso
-   * @param {string} credentials.email - Email del usuario
-   * @param {string} credentials.password - Contraseña del usuario
-   * @returns {Promise<AuthResponse>} Respuesta con token y datos de usuario
-   */
+ 
   async login(credentials) {
     try {
       // Validar que se proporcionen credenciales
