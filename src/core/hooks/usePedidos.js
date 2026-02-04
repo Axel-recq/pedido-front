@@ -1,7 +1,3 @@
-/**
- * Hook de Pedidos
- * Maneja la lógica de negocio de pedidos con React Query
- */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { pedidoService } from '@/core/services'
