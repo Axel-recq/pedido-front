@@ -1,8 +1,4 @@
 
-/**
- * Configuración de React Query
- * Define opciones globales para queries y mutations
- */
 
 import { QueryClient } from '@tanstack/react-query'
 
