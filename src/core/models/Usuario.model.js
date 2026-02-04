@@ -1,7 +1,4 @@
-/**
- * Modelo de Usuario
- * Define la estructura de datos del usuario
- */
+ 
 
 export class Usuario {
   constructor(data = {}) {
