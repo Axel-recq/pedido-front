@@ -1,16 +1,7 @@
-/**
- * Hook para manejar localStorage de forma reactiva
- * Sincroniza el estado de React con localStorage
- */
+ 
 
 import { useState, useEffect, useCallback } from 'react'
-
-/**
- * Hook useLocalStorage
- * @param {string} key - Clave del localStorage
- * @param {any} initialValue - Valor inicial
- * @returns {[any, Function, Function]} [value, setValue, removeValue]
- */
+ 
 export const useLocalStorage = (key, initialValue) => {
   // Estado para almacenar el valor
   const [storedValue, setStoredValue] = useState(() => {
