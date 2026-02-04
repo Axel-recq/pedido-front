@@ -1,8 +1,4 @@
  
-/**
- * Página de Login
- * Diseño moderno con carousel de imágenes y formulario lateral
- */
 
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
