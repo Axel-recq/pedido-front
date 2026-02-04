@@ -1,8 +1,4 @@
  
-/**
- * Componente LoginForm
- * Formulario de inicio de sesión
- */
 
 import { useState } from 'react'
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react'
