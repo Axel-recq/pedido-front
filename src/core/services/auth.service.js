@@ -1,7 +1,4 @@
-/**
- * Servicio de Autenticación
- * Maneja login, logout y gestión de sesión
- */
+ 
 
 import httpService from './http.service'
 import { API_ENDPOINTS } from '@/config/api.config'
