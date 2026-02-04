@@ -1,7 +1,4 @@
-/**
- * Constantes globales de la aplicación
- * Centraliza valores que se usan en múltiples lugares
- */
+
 
 // Estados de pedidos
 export const PEDIDO_ESTADOS = {
