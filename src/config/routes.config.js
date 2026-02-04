@@ -1,7 +1,3 @@
-/**
- * Configuración de rutas de la aplicación
- * Define la estructura de navegación
- */
 
 export const ROUTES = {
   // Rutas públicas
