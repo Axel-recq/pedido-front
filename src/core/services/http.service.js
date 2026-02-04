@@ -1,7 +1,4 @@
-/**
- * Servicio HTTP Base
- * Wrapper de Axios con interceptors y manejo de errores centralizado
- */
+ 
 
 import axios from 'axios'
 import { API_CONFIG } from '@/config/api.config'
