@@ -1,8 +1,4 @@
-
-/**
- * Componente Principal de la Aplicación
- * Configura providers y rutas
- */
+ 
 
 import { BrowserRouter } from 'react-router-dom'
 import { QueryClientProvider } from '@tanstack/react-query'
