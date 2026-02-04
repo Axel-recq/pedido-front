@@ -1,8 +1,4 @@
-/**
- * Modelo de autenticación
- * Define la estructura de datos para login y tokens
- */
-
+ 
 export class AuthResponse {
   constructor(data = {}) {
     this.token = data.token || ''
