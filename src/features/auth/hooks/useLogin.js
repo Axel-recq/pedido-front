@@ -1,7 +1,4 @@
-/**
- * Hook de Login
- * Maneja la lógica de inicio de sesión
- */
+ 
 
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
