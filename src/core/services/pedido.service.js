@@ -1,8 +1,4 @@
-/**
- * Servicio de Pedidos
- * Maneja todas las operaciones CRUD de pedidos
- */
-
+ 
 import httpService from './http.service'
 import { API_ENDPOINTS } from '@/config/api.config'
 import { Pedido } from '@/core/models'
