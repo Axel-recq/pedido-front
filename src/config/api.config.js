@@ -1,7 +1,3 @@
-/**
- * Configuración centralizada de la API
- * Contiene URLs, timeouts y configuraciones de Axios
- */
 
 // Variables de entorno
 export const API_CONFIG = {
